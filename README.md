@@ -1,10 +1,11 @@
-# rfnoc_docker_run
-=====================
-RFNoC Docker Env. Run Command
+# RFNoC Docker Env. Run Command
 ---------------------
 
-## docker image run
+## RFNoC Docker Image Descriptions :
 ------------------
+--- Ubuntu 18.04 LTS
+--- uhd/gr-ettus/uhd-fpga/
+--- sdk-cross-compiled version of 
 
 in CentOS7, 기본 명령어
 
@@ -35,6 +36,12 @@ $ docker exec Container_Nick_Name /bin/bash
 이렇게 하기 위해서는 도커 이미지에서 컨테이너를 불러 올 때, User Work폴더를 컨테이너에 마운트 해줘야 하는데
 명령이 좀 길어서...sh script를 사용한다.
 
+작업하고자 하는 폴더를 시스템에 생성해놓고, docker_run.sh파일을 가져와서 (현재 폴더를 마운트하라는 명령이 sh script에 포함되어 있음
+
+$ source docker_run.sh rfnoc:0.6 
+$ source <script.sh> <docker image>:<TAG>
+그럼 안 붙는다. 왜?
+
 $ docker_run.sh <이미지이름>:<TAG>
   
 ### 7. Container 작업 종료하고 나가기
@@ -42,3 +49,48 @@ $ exit
   
 ### 8. 사용하지 않는 Docker Image 삭제하기
 $ docker rmi <이미지이름>:<태그>
+
+
+### 
+
+
+```
+
+~/Projects/RFNoC
+source docker_run.sh rfnoc:0.6
+// container의 workspace2에 rfnoc폴더가 mount됨
+cd rfnoc/src
+
+source /opt/Xilinx/Vivado/2017.4/settings64.sh
+source uhd-fpga/usrp3/top/x300/setupenv.sh
+
+ >> Environment successfully initialized.
+----------------------------------------------------------------------- 
+rfnocmodtool newmod test
+cd rfnoc-test
+rfnocmodtool add gain
+N/ N/ 1111222233334444 / N/ N/ 
+mkdir build
+cd build
+cmake -DUHD_FPGA_DIR=../../uhd-fpga/ ../
+
+>> Performing Test HAVE_WNO_UNUSED_BUT_SET_VARIABLE - Success
+>> Configuring done
+>> Generating done
+>> Build files have been written to : 
+
+make test_tb
+make noc_block_gain_tb
+
+>> Checking /Environment
+>> Builer Checking Tools..
+>> Bibado Simulator 
+>> Xsim completed. XSim simulation ran for 
+>> BUILDER: Closing project
+INFO: [Common 17-206] Exiting Vivado at Mon Apr 13 ~
+Built target noc_block_gain_tb
+-----------------------------------------------------------------------
+
+```
+
+
